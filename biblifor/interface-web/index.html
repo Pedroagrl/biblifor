@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BIBLIFOR</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1f2e, #16213e);
+      border-bottom: 2px solid #00b4d8;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      color: #00b4d8;
+      letter-spacing: 4px;
+      font-weight: 700;
+    }
+
+    header span {
+      font-size: 13px;
+      color: #90a0b0;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      background: #161b27;
+      padding: 12px 40px;
+      border-bottom: 1px solid #1e2a3a;
+    }
+
+    nav button {
+      background: transparent;
+      border: 1px solid #1e2a3a;
+      color: #90a0b0;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    nav button:hover, nav button.ativo {
+      background: #00b4d8;
+      color: #fff;
+      border-color: #00b4d8;
+    }
+
+    .container { padding: 32px 40px; max-width: 1100px; margin: 0 auto; }
+
+    .secao { display: none; }
+    .secao.ativa { display: block; }
+
+    h2 {
+      font-size: 20px;
+      color: #00b4d8;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #1e2a3a;
+    }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .card {
+      background: #161b27;
+      border: 1px solid #1e2a3a;
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      color: #90a0b0;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #1e2a3a;
+      color: #e0e0e0;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus { border-color: #00b4d8; }
+
+    button.btn {
+      background: #00b4d8;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    button.btn:hover { background: #0096c7; }
+    button.btn.danger { background: #e63946; }
+    button.btn.danger:hover { background: #c1121f; }
+    button.btn.success { background: #2dc653; }
+    button.btn.success:hover { background: #25a244; }
+
+    .lista {
+      margin-top: 24px;
+      background: #161b27;
+      border: 1px solid #1e2a3a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .lista-header {
+      padding: 14px 20px;
+      background: #1a2030;
+      font-size: 13px;
+      color: #90a0b0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lista-header button {
+      background: transparent;
+      border: 1px solid #1e2a3a;
+      color: #90a0b0;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .lista-header button:hover { border-color: #00b4d8; color: #00b4d8; }
+
+    .item {
+      padding: 14px 20px;
+      border-bottom: 1px solid #1e2a3a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .item:last-child { border-bottom: none; }
+
+    .item:hover { background: #1a2030; }
+
+    .badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .badge.verde  { background: #143620; color: #2dc653; }
+    .badge.vermelho { background: #2d1014; color: #e63946; }
+    .badge.azul   { background: #0d2233; color: #00b4d8; }
+
+    .msg {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-top: 12px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .msg.ok  { background: #143620; color: #2dc653; display: block; }
+    .msg.err { background: #2d1014; color: #e63946; display: block; }
+
+    .vazio { padding: 32px; text-align: center; color: #3a4a5a; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>BIBLIFOR</h1>
+    <span>Sistema de Gerenciamento de Livraria</span>
+  </div>
+</header>
+
+<nav>
+  <button class="ativo" onclick="mostrar('livros', this)">Livros</button>
+  <button onclick="mostrar('usuarios', this)">Usuários</button>
+  <button onclick="mostrar('emprestimos', this)">Empréstimos</button>
+</nav>
+
+<div class="container">
+
+  <!-- ===== LIVROS ===== -->
+  <div id="livros" class="secao ativa">
+    <h2>Gerenciar Livros</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Cadastrar Livro</h3>
+        <input id="livro-titulo" placeholder="Título do livro" />
+        <input id="livro-autor" placeholder="Nome do autor" />
+        <button class="btn" onclick="cadastrarLivro()">Cadastrar</button>
+        <div id="msg-livro" class="msg"></div>
+      </div>
+      <div class="card">
+        <h3>Buscar por ID</h3>
+        <input id="livro-busca-id" placeholder="ID do livro" type="number" />
+        <button class="btn" onclick="buscarLivro()">Buscar</button>
+        <div id="msg-livro-busca" class="msg"></div>
+      </div>
+    </div>
+    <div class="lista">
+      <div class="lista-header">
+        <span>Todos os livros</span>
+        <button onclick="carregarLivros()">Atualizar</button>
+      </div>
+      <div id="lista-livros"><div class="vazio">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- ===== USUARIOS ===== -->
+  <div id="usuarios" class="secao">
+    <h2>Gerenciar Usuários</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Cadastrar Usuário</h3>
+        <input id="usuario-nome" placeholder="Nome completo" />
+        <input id="usuario-email" placeholder="E-mail" type="email" />
+        <button class="btn" onclick="cadastrarUsuario()">Cadastrar</button>
+        <div id="msg-usuario" class="msg"></div>
+      </div>
+      <div class="card">
+        <h3>Buscar Histórico</h3>
+        <input id="usuario-hist-id" placeholder="ID do usuário" type="number" />
+        <button class="btn" onclick="buscarHistorico()">Ver Histórico</button>
+        <div id="msg-historico" class="msg"></div>
+      </div>
+    </div>
+    <div class="lista">
+      <div class="lista-header">
+        <span>Todos os usuários</span>
+        <button onclick="carregarUsuarios()">Atualizar</button>
+      </div>
+      <div id="lista-usuarios"><div class="vazio">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- ===== EMPRÉSTIMOS ===== -->
+  <div id="emprestimos" class="secao">
+    <h2>Gerenciar Empréstimos</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Realizar Empréstimo</h3>
+        <input id="emp-livro-id" placeholder="ID do livro" type="number" />
+        <input id="emp-usuario-id" placeholder="ID do usuário" type="number" />
+        <button class="btn success" onclick="realizarEmprestimo()">Emprestar</button>
+        <div id="msg-emprestimo" class="msg"></div>
+      </div>
+      <div class="card">
+        <h3>Devolver Livro</h3>
+        <input id="emp-devolver-id" placeholder="ID do empréstimo" type="number" />
+        <button class="btn danger" onclick="devolverLivro()">Devolver</button>
+        <div id="msg-devolucao" class="msg"></div>
+      </div>
+    </div>
+    <div class="lista">
+      <div class="lista-header">
+        <span>Todos os empréstimos</span>
+        <button onclick="carregarEmprestimos()">Atualizar</button>
+      </div>
+      <div id="lista-emprestimos"><div class="vazio">Carregando...</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const LIVROS_URL    = 'http://localhost:8081';
+  const USUARIOS_URL  = 'http://localhost:8082';
+
+  // --- Navegação ---
+  function mostrar(id, btn) {
+    document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('ativo'));
+    document.getElementById(id).classList.add('ativa');
+    btn.classList.add('ativo');
+    if (id === 'livros')      carregarLivros();
+    if (id === 'usuarios')    carregarUsuarios();
+    if (id === 'emprestimos') carregarEmprestimos();
+  }
+
+  function msg(id, texto, tipo) {
+    const el = document.getElementById(id);
+    el.textContent = texto;
+    el.className = 'msg ' + tipo;
+    setTimeout(() => el.className = 'msg', 4000);
+  }
+
+  // --- LIVROS ---
+  async function carregarLivros() {
+    const res = await fetch(LIVROS_URL + '/livros');
+    const livros = await res.json();
+    const el = document.getElementById('lista-livros');
+    if (!livros.length) { el.innerHTML = '<div class="vazio">Nenhum livro cadastrado.</div>'; return; }
+    el.innerHTML = livros.map(l => `
+      <div class="item">
+        <div>
+          <strong>#${l.id} — ${l.titulo}</strong>
+          <div style="font-size:12px;color:#607080;margin-top:2px">Autor: ${l.autor}</div>
+        </div>
+        <span class="badge ${l.disponivel ? 'verde' : 'vermelho'}">
+          ${l.disponivel ? 'Disponível' : 'Emprestado'}
+        </span>
+      </div>`).join('');
+  }
+
+  async function cadastrarLivro() {
+    const titulo = document.getElementById('livro-titulo').value.trim();
+    const autor  = document.getElementById('livro-autor').value.trim();
+    if (!titulo || !autor) { msg('msg-livro', 'Preencha todos os campos.', 'err'); return; }
+    const res = await fetch(LIVROS_URL + '/livros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ titulo, autor })
+    });
+    const livro = await res.json();
+    msg('msg-livro', `Livro "${livro.titulo}" cadastrado com ID ${livro.id}!`, 'ok');
+    document.getElementById('livro-titulo').value = '';
+    document.getElementById('livro-autor').value = '';
+    carregarLivros();
+  }
+
+  async function buscarLivro() {
+    const id = document.getElementById('livro-busca-id').value;
+    if (!id) { msg('msg-livro-busca', 'Informe um ID.', 'err'); return; }
+    const res = await fetch(LIVROS_URL + '/livros/' + id);
+    if (!res.ok) { msg('msg-livro-busca', 'Livro não encontrado.', 'err'); return; }
+    const l = await res.json();
+    msg('msg-livro-busca', `#${l.id} — ${l.titulo} | Autor: ${l.autor} | ${l.disponivel ? 'Disponível' : 'Emprestado'}`, 'ok');
+  }
+
+  // --- USUARIOS ---
+  async function carregarUsuarios() {
+    const res = await fetch(USUARIOS_URL + '/usuarios');
+    const usuarios = await res.json();
+    const el = document.getElementById('lista-usuarios');
+    if (!usuarios.length) { el.innerHTML = '<div class="vazio">Nenhum usuário cadastrado.</div>'; return; }
+    el.innerHTML = usuarios.map(u => `
+      <div class="item">
+        <div>
+          <strong>#${u.id} — ${u.nome}</strong>
+          <div style="font-size:12px;color:#607080;margin-top:2px">${u.email}</div>
+        </div>
+        <span class="badge azul">${u.historico.length} empréstimo(s)</span>
+      </div>`).join('');
+  }
+
+  async function cadastrarUsuario() {
+    const nome  = document.getElementById('usuario-nome').value.trim();
+    const email = document.getElementById('usuario-email').value.trim();
+    if (!nome || !email) { msg('msg-usuario', 'Preencha todos os campos.', 'err'); return; }
+    const res = await fetch(USUARIOS_URL + '/usuarios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, email })
+    });
+    const u = await res.json();
+    msg('msg-usuario', `Usuário "${u.nome}" cadastrado com ID ${u.id}!`, 'ok');
+    document.getElementById('usuario-nome').value = '';
+    document.getElementById('usuario-email').value = '';
+    carregarUsuarios();
+  }
+
+  async function buscarHistorico() {
+    const id = document.getElementById('usuario-hist-id').value;
+    if (!id) { msg('msg-historico', 'Informe um ID.', 'err'); return; }
+    const res = await fetch(USUARIOS_URL + '/usuarios/' + id);
+    if (!res.ok) { msg('msg-historico', 'Usuário não encontrado.', 'err'); return; }
+    const u = await res.json();
+    const hist = u.historico.length ? u.historico.join(' | ') : 'Nenhum empréstimo ainda.';
+    msg('msg-historico', `${u.nome}: ${hist}`, 'ok');
+  }
+
+  // --- EMPRESTIMOS ---
+  async function carregarEmprestimos() {
+    const res = await fetch(USUARIOS_URL + '/emprestimos');
+    const lista = await res.json();
+    const el = document.getElementById('lista-emprestimos');
+    if (!lista.length) { el.innerHTML = '<div class="vazio">Nenhum empréstimo registrado.</div>'; return; }
+    el.innerHTML = lista.map(e => `
+      <div class="item">
+        <div>
+          <strong>#${e.id} — ${e.tituloLivro}</strong>
+          <div style="font-size:12px;color:#607080;margin-top:2px">
+            Usuário: ${e.nomeUsuario} | Devolução: ${e.dataDevolucao}
+          </div>
+        </div>
+        <span class="badge ${e.ativo ? 'azul' : 'verde'}">${e.ativo ? 'Ativo' : 'Devolvido'}</span>
+      </div>`).join('');
+  }
+
+  async function realizarEmprestimo() {
+    const livroId   = document.getElementById('emp-livro-id').value;
+    const usuarioId = document.getElementById('emp-usuario-id').value;
+    if (!livroId || !usuarioId) { msg('msg-emprestimo', 'Preencha os IDs.', 'err'); return; }
+    const res = await fetch(USUARIOS_URL + '/emprestimos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ livroId: Number(livroId), usuarioId: Number(usuarioId) })
+    });
+    const texto = await res.text();
+    msg('msg-emprestimo', texto, res.ok ? 'ok' : 'err');
+    if (res.ok) { carregarEmprestimos(); carregarLivros(); }
+  }
+
+  async function devolverLivro() {
+    const id = document.getElementById('emp-devolver-id').value;
+    if (!id) { msg('msg-devolucao', 'Informe o ID do empréstimo.', 'err'); return; }
+    const res = await fetch(USUARIOS_URL + '/emprestimos/' + id + '/devolver', { method: 'PATCH' });
+    const texto = await res.text();
+    msg('msg-devolucao', texto, res.ok ? 'ok' : 'err');
+    if (res.ok) { carregarEmprestimos(); carregarLivros(); }
+  }
+
+  // Carrega livros ao abrir
+  carregarLivros();
+</script>
+</body>
+</html>
