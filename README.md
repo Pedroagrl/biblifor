@@ -13,11 +13,6 @@
 
 ---
 
-
-> ⚠️ Substituir pelos links reais após criar os repositórios no GitHub.
-
----
-
 ## 📐 Arquitetura do Sistema
 
 ```
